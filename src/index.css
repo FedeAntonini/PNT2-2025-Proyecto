@@ -66,3 +66,26 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+/* ===== Reset + root a pantalla completa (sin límites del template) ===== */
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* el scroll se maneja dentro de las listas/mensajes */
+}
+
+/* Tipografía base opcional */
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+/* Quita límites del template Vite (si los tenía) */
+#root {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
