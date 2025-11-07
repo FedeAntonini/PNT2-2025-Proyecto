@@ -1,5 +1,3 @@
-'use client';
-
 export default function MessageList({ messages = [] }) {
     return (
         <div className="chat-messages">

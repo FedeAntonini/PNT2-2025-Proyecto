@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useRef, useEffect } from 'react';
 import { FaPlus, FaMicrophone, FaFileAlt, FaImage, FaVideo } from 'react-icons/fa';
 

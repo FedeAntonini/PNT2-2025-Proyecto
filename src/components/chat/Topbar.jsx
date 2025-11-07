@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useRef, useState } from 'react';
 import { FaHome, FaCog, FaQuestionCircle, FaUser } from 'react-icons/fa';
 import { useAuth } from '../hooks/useAuth';

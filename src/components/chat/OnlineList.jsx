@@ -1,5 +1,3 @@
-'use client';
-
 export default function OnlineList({ users = [] }) {
     return (
         <ul className="online-list">

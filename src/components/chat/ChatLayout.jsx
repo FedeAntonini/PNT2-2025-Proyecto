@@ -1,5 +1,3 @@
-'use client';
-
 import { useMemo, useState } from 'react';
 import Topbar from './Topbar';
 import RoomsList from './RoomsList';
@@ -12,8 +10,8 @@ export default function ChatLayout() {
   // Salas mock
   const rooms = [
     { id: 'general', name: 'Sala general' },
-    { id: 'equipo',  name: 'Equipo' },
-    { id: 'random',  name: 'Random' },
+    { id: 'equipo', name: 'Equipo' },
+    { id: 'random', name: 'Random' },
     { id: 'soporte', name: 'Soporte' },
   ];
 
@@ -22,12 +20,12 @@ export default function ChatLayout() {
 
   // Mensajes mock con roomId
   const allMessages = [
-    { id: 1,  roomId: 'general', text: 'Hola!',       side: 'left'  },
-    { id: 2,  roomId: 'general', text: '¿Todo bien?', side: 'left'  },
-    { id: 3,  roomId: 'general', text: 'Sí, todo ok', side: 'right' },
-    { id: 4,  roomId: 'equipo',  text: 'Sprint hoy',  side: 'left'  },
-    { id: 5,  roomId: 'random',  text: 'Memes',       side: 'right' },
-    { id: 6,  roomId: 'soporte', text: 'Ticket #123', side: 'left'  },
+    { id: 1, roomId: 'general', text: 'Hola!', side: 'left' },
+    { id: 2, roomId: 'general', text: '¿Todo bien?', side: 'left' },
+    { id: 3, roomId: 'general', text: 'Sí, todo ok', side: 'right' },
+    { id: 4, roomId: 'equipo', text: 'Sprint hoy', side: 'left' },
+    { id: 5, roomId: 'random', text: 'Memes', side: 'right' },
+    { id: 6, roomId: 'soporte', text: 'Ticket #123', side: 'left' },
   ];
 
   // Sala seleccionada
