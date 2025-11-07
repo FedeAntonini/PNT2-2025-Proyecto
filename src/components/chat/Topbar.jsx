@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { FaHome, FaCog, FaQuestionCircle } from 'react-icons/fa';
+import { FaHome, FaCog, FaQuestionCircle, FaUser } from 'react-icons/fa';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Topbar() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
-
+  const { user } = useAuth()
   // cerrar dropdown al clickear fuera
   useEffect(() => {
     const onClick = (e) => {
@@ -44,7 +45,7 @@ export default function Topbar() {
             aria-label="Usuario"
           >
             {/* Avatar “fake”: iniciales; podés cambiar por <img src="..." /> */}
-            <div className="avatar">F</div>
+            <div><FaUser /></div>
           </button>
 
           {open && (
