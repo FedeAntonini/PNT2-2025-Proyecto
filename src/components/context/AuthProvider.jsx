@@ -6,6 +6,8 @@ const API_BASE = import.meta.env.VITE_API_BASE;
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
 
     // Restaurar sesión al cargar
     useEffect(() => {
@@ -17,7 +19,40 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
-    // Guardar en localStorage cuando cambie
+    useEffect(() => {
+        async function fetchUser() {
+            setLoading(true)
+            try {
+                const res = await fetch(`${API_BASE}/auth/me`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    }
+                });
+                const data = await res.json()
+                const userData = {
+                    username: data?.username,
+                    email: data?.attributes?.email,
+                    id: data?.attributes?.sub
+                }
+                setUser(userData)
+            } catch (err) {
+                if (err instanceof Error) {
+                    setError(err.message)
+                } else {
+                    console.error("Error logging in:", err);
+                }
+                return false;
+            } finally {
+                setLoading(false)
+            }
+        }
+        if (token) {
+            fetchUser()
+        }
+    }, [token])
+
     useEffect(() => {
         if (user && token) {
             localStorage.setItem("user", JSON.stringify(user));
@@ -31,6 +66,7 @@ export const AuthProvider = ({ children }) => {
     // ---- FUNCIONES ----
 
     const login = async (email, password) => {
+        setLoading(true)
         try {
             const res = await fetch(`${API_BASE}/auth/login`, {
                 method: "POST",
@@ -46,13 +82,17 @@ export const AuthProvider = ({ children }) => {
             }
 
             const data = await res.json();
-            // Supongamos que el token viene como { access_token: "..." }
-            setToken(data.access_token);
-            setUser({ email }); // Podrías reemplazar por info más completa si el backend devuelve más
+            setToken(data.accessToken);
             return true;
         } catch (err) {
-            console.error("Error logging in:", err);
+            if (err instanceof Error) {
+                setError(err.message)
+            } else {
+                console.error("Error logging in:", err);
+            }
             return false;
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -62,9 +102,33 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("user");
         localStorage.removeItem("token");
     };
+    const signup = async (email, password) => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${API_BASE}/auth/signup`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
 
+            if (!response.ok) {
+                throw new Error("Signup failed. Please check your input.");
+            }
+
+            setError(null)
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message)
+            }
+            else {
+                console.error(err)
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, signup, loading, error }}>
             {children}
         </AuthContext.Provider>
     );
