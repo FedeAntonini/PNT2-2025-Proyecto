@@ -222,11 +222,19 @@
 
 /* Input inferior */
 .chat-input{
-  display: grid;
-  grid-template-columns: 56px 1fr 56px; /* + | input | mic */
+  display: flex;
   gap: 12px;
   align-items: center;
   padding: 10px;
+  border-top: 1px solid var(--line);
+  background: var(--panel-center);
+}
+
+.room-input{
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  align-items: center;
   border-top: 1px solid var(--line);
   background: var(--panel-center);
 }
@@ -242,7 +250,7 @@
   cursor: pointer; line-height: 1;
 }
 .chat-text{
-  width: 100%;
+  flex: 1;
   height: 44px;
   border-radius: 12px;
   border: none;

@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { FaPlus, FaMicrophone, FaFileAlt, FaImage, FaVideo } from 'react-icons/fa';
+import { useChat } from '../hooks/useChat';
+import { FaMessage } from 'react-icons/fa6';
 
 export default function ChatInput() {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef(null);
-
+  const { postMessage } = useChat()
+  const [message, setMessage] = useState("")
   // Cerrar el menú si se clickea fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -16,43 +19,21 @@ export default function ChatInput() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    postMessage(message)
+    setMessage("")
+  }
   return (
-    <div className="chat-input">
-      {/* Botón + con menú */}
-      <div className="attach-wrapper" ref={wrapRef}>
-        <button
-          type="button"
-          className="btn-plus"
-          onClick={() => setOpen((v) => !v)}
-          aria-haspopup="menu"
-          aria-expanded={open}
-          aria-label="Adjuntar archivo"
-        >
-          <FaPlus />
+    <div >
+      <form className="chat-input" onSubmit={handleSubmit}>
+        <input className="chat-text" placeholder="Escribe tu texto..." value={message} onChange={(e) => setMessage(e.target.value)} />
+
+        {/* Mic (ícono real) */}
+        <button type="submit" className="btn-mic" aria-label="Grabar audio" >
+          <FaMessage />
         </button>
-
-        {open && (
-          <div className="attach-menu" role="menu">
-            <button className="attach-item" role="menuitem" type="button">
-              <FaFileAlt className="attach-icon" /> Documentos
-            </button>
-            <button className="attach-item" role="menuitem" type="button">
-              <FaImage className="attach-icon" /> Fotos
-            </button>
-            <button className="attach-item" role="menuitem" type="button">
-              <FaVideo className="attach-icon" /> Videos
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Input de texto */}
-      <input className="chat-text" placeholder="Escribe tu texto..." />
-
-      {/* Mic (ícono real) */}
-      <button type="button" className="btn-mic" aria-label="Grabar audio">
-        <FaMicrophone />
-      </button>
+      </form>
     </div>
   );
 }
