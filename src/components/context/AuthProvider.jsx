@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
+import { useNavigate } from "react-router";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
@@ -8,8 +9,8 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const navigate = useNavigate()
 
-    // Restaurar sesión al cargar
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         const storedToken = localStorage.getItem("token");
@@ -63,8 +64,6 @@ export const AuthProvider = ({ children }) => {
         }
     }, [user, token]);
 
-    // ---- FUNCIONES ----
-
     const login = async (email, password) => {
         setLoading(true)
         try {
@@ -83,6 +82,8 @@ export const AuthProvider = ({ children }) => {
 
             const data = await res.json();
             setToken(data.accessToken);
+            setError(null)
+            navigate('/')
             return true;
         } catch (err) {
             if (err instanceof Error) {
@@ -114,8 +115,8 @@ export const AuthProvider = ({ children }) => {
             if (!response.ok) {
                 throw new Error("Signup failed. Please check your input.");
             }
-
             setError(null)
+            navigate('/login')
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message)

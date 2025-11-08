@@ -123,7 +123,9 @@
 }
 .user-menu-item:hover{ background: rgba(255,255,255,0.10); }
 .user-menu-item.sep{ margin-top: 4px; }
-
+.user-menu-item:disabled{
+    color: grey
+}
 /* ========= Grid central full-screen (sin scroll externo) ========= */
 .chat-shell{
   flex: 1; /* ocupa todo el alto restante */

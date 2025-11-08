@@ -6,17 +6,24 @@ import { AuthProvider } from './components/context/AuthProvider.jsx'
 import { BrowserRouter, Route, Routes } from "react-router";
 import { LoginForm } from './components/auth/LoginForm.jsx'
 import { SignupForm } from './components/auth/SignupForm.jsx'
+import { ChatProvider } from './components/context/ChatProvider.jsx'
+import AuthLayout from './components/context/AuthLayout.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <Routes>
-          <Route index path="/" element={<App />} />
+          <Route
+            path="/"
+            element={<AuthLayout />}
+          >
+            <Route path='/' element={<App />} />
+          </Route>
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignupForm />} />
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </StrictMode>,
 )
