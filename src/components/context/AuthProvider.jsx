@@ -102,13 +102,13 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("user");
         localStorage.removeItem("token");
     };
-    const signup = async (email, password) => {
+    const signup = async (username, email, password) => {
         setLoading(true);
         try {
             const response = await fetch(`${API_BASE}/auth/signup`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ username, email, password }),
             });
 
             if (!response.ok) {

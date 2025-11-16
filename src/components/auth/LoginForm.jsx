@@ -4,12 +4,12 @@ import "./auth.css";
 
 export const LoginForm = () => {
     const { user, loading, logout, login, error } = useAuth();
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     if (user) {
         return (
             <div className="auth-container">
-                <h2>Welcome, {user.email}</h2>
+                <h2>Welcome, {user.username}</h2>
                 <button onClick={logout}>Logout</button>
             </div>
         );
@@ -17,17 +17,17 @@ export const LoginForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        login(email, password);
+        login(username, password);
     };
 
     return (
         <form onSubmit={handleSubmit} className="auth-container">
             <h2>Welcome back!</h2>
             <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
             />
             <input

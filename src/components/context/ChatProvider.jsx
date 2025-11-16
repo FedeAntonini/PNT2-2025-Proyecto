@@ -10,17 +10,51 @@ export const ChatProvider = ({ children }) => {
     const [messages, setMessages] = useState([])
     const [roomId, setRoomId] = useState("")
     const [rooms, setRooms] = useState([])
+    const [roomUsers, setRoomUsers] = useState([])
     useEffect(() => {
         const status = user !== null && token !== null;
         setIsAuthenticated(status);
-        console.log("Authenticated:", status);
     }, [user, token]);
 
     useEffect(() => {
+        async function fetchRooms() {
+            try {
+                const res = await fetch(`${import.meta.env.VITE_API_BASE}/room`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                });
+
+                if (!res.ok) {
+                    const error = await res.text();
+                    throw new Error(`Server responded with ${res.status}: ${error}`);
+                }
+
+                const { rooms } = await res.json();
+                setRooms(rooms)
+            } catch (err) {
+                console.error("❌ Failed to send message:", err);
+                return null;
+            }
+        }
+        if (isAuthenticated) {
+            fetchRooms()
+        } else {
+            setRooms([])
+            setRoomUsers([])
+            setMessages([{ text: "Inicia sesión antes de usar la aplicacion" }])
+        }
+    }, [isAuthenticated])
+
+    useEffect(() => {
         if (!isAuthenticated) return;
-        console.log(roomId)
         const newSocket = io(import.meta.env.VITE_API_BASE, {
             transports: ["websocket"],
+            auth: {
+                token
+            }
         });
 
         setSocket(newSocket);
@@ -29,6 +63,10 @@ export const ChatProvider = ({ children }) => {
             console.log("received")
             addMessage(msg, "PRUEBA", roomId, "left");
         };
+
+        const handleRoomUsers = (users) => setRoomUsers(users)
+
+        const handleRooms = (rooms) => setRooms(rooms)
 
         newSocket.on("connect", () => {
             console.log("🟢 Connected to socket server:", newSocket.id);
@@ -39,6 +77,10 @@ export const ChatProvider = ({ children }) => {
         });
 
         newSocket.on("message", handleMessage);
+
+        newSocket.on('roomUsers', handleRoomUsers)
+
+        newSocket.on('rooms', handleRooms)
 
         // ✅ Cleanup
         return () => {
@@ -137,7 +179,9 @@ export const ChatProvider = ({ children }) => {
         <ChatContext.Provider value={{
             joinRoom,
             roomId,
+            rooms,
             messages,
+            roomUsers,
             addMessage,
             addServerMessage,
             addUserMessage,

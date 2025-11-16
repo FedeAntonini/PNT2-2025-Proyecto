@@ -4,18 +4,25 @@ import { useAuth } from "../hooks/useAuth";
 
 export const SignupForm = () => {
     const { loading, signup } = useAuth();
-
+    const [username, setUsername] = useState("")
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const handleSignup = useCallback((e) => {
         e.preventDefault()
-        signup(email, password)
+        signup(username, email, password)
     }, [email, password])
 
     return (
         <form onSubmit={handleSignup} className="auth-container">
-            <h2>Sign Up</h2>
+            <h2>Registrar</h2>
+            <input
+                type="username"
+                placeholder="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+            />
             <input
                 type="email"
                 placeholder="Email"
