@@ -217,6 +217,12 @@
   padding: 10px 14px;
   border-radius: 12px;
   line-height: 1.25rem;
+  min-width: 100px;
+}
+.username{
+  font-weight: 700;
+  font-size: small;
+  color: lightgreen;
 }
 .messages-bottom-spacer{ height: 8px; }
 

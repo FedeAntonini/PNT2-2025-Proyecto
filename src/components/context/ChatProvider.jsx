@@ -59,9 +59,8 @@ export const ChatProvider = ({ children }) => {
 
         setSocket(newSocket);
 
-        const handleMessage = (msg) => {
-            console.log("received")
-            addMessage(msg, "PRUEBA", roomId, "left");
+        const handleMessage = (k) => {
+            addMessage(k.message, k.username, k.room, switchSide(k.username));
         };
 
         const handleRoomUsers = (users) => setRoomUsers(users)
@@ -89,13 +88,13 @@ export const ChatProvider = ({ children }) => {
         };
     }, [isAuthenticated, roomId]);
 
-    const addMessage = (text, username, roomId, side) => setMessages(prev => ([
+    const addMessage = (message, username, room, side) => setMessages(prev => ([
         ...prev,
         {
             id: messages.length,
             username: username || "",
-            text,
-            roomId: roomId || "",
+            message,
+            room: room || "",
             side: side || "left"
         }
     ]))
@@ -106,17 +105,18 @@ export const ChatProvider = ({ children }) => {
     const joinRoom = async (roomName) => {
         if (socket && socket.connected) {
             clearMessages()
-
             addMessage(`Joined room: ${roomName}`)
             addMessage(`Fetching messages, please wait`)
             const roomMessages = await fetchMessages(roomName, token)
             socket.emit("joinRoom", roomName);
             setRoomId(roomName)
-            roomMessages.forEach((k) => addServerMessage(k.message))
+            roomMessages.forEach((k) => addMessage(k.message, k.username, k.room, switchSide(k.username)))
         } else {
             addMessage("Socket not connected — cannot join room yet.")
         }
     };
+
+    const switchSide = (text) => {if (text === user.username) return "right" ; else return "left"} 
 
     const postMessage = async (message) => {
         if (!roomId || !token || !message) return
@@ -160,7 +160,7 @@ export const ChatProvider = ({ children }) => {
             }
 
             const data = await response.json();
-
+            console.log(data);
             // DynamoDB items use { S: "value" } structure — flatten them
             const messages = (data.messages || []).map((msg) => ({
                 username: msg.username?.S || "unknown",
