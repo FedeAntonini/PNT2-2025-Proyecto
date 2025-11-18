@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
 import { useNavigate } from "react-router";
-
+import { toast } from 'react-toastify'
+import { LoginException } from "../auth/LoginException";
 const API_BASE = import.meta.env.VITE_API_BASE;
 
 export const AuthProvider = ({ children }) => {
@@ -75,20 +76,30 @@ export const AuthProvider = ({ children }) => {
                 }),
             });
 
+            const data = await res.json()
+
             if (!res.ok) {
-                throw new Error("Login failed");
+                throw new LoginException(data.message, data.error)
             }
 
-            const data = await res.json();
             setToken(data.accessToken);
             setError(null)
             navigate('/')
             return true;
         } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message)
-            } else {
-                console.error("Error logging in:", err);
+            switch (err.error) {
+                case "NotAuthorizedException": {
+                    toast.error("Usuario o contraseña incorrecta")
+                    break;
+                }
+                case "UserNotConfirmedException": {
+                    toast.error("Verifique su cuenta de correo antes de continuar")
+                    break;
+                }
+                default: {
+                    toast.error(err.message)
+                    break;
+                }
             }
             return false;
         } finally {
@@ -111,18 +122,26 @@ export const AuthProvider = ({ children }) => {
                 body: JSON.stringify({ username, email, password }),
             });
 
+            const data = await response.json()
+
             if (!response.ok) {
-                throw new Error("Signup failed. Please check your input.");
+                throw new LoginException(data.message, data.error)
             }
+
             setError(null)
             navigate('/login')
         } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message)
+            switch (err.error) {
+                case "UsernameExistsException": {
+                    toast.error("El usuario ya existe")
+                    break;
+                }
+                default: {
+                    toast.error(err.message)
+                    break;
+                }
             }
-            else {
-                console.error(err)
-            }
+            return false;
         } finally {
             setLoading(false);
         }
