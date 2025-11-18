@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import "./auth.css";
+import { ToastContainer } from "react-toastify";
 
 export const LoginForm = () => {
-    const { user, loading, logout, login, error } = useAuth();
+    const { user, loading, logout, login } = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     if (user) {
         return (
             <div className="auth-container">
-                <h2>Welcome, {user.username}</h2>
+                <h2>Bienvenido, {user.username}</h2>
                 <button onClick={logout}>Logout</button>
             </div>
         );
@@ -22,7 +23,7 @@ export const LoginForm = () => {
 
     return (
         <form onSubmit={handleSubmit} className="auth-container">
-            <h2>Welcome back!</h2>
+            <h2>Iniciar sesión</h2>
             <input
                 type="text"
                 placeholder="Username"
@@ -38,9 +39,9 @@ export const LoginForm = () => {
                 required
             />
             <button type="submit" disabled={loading}>
-                {loading ? "Logging in..." : "Login"}
+                {loading ? "Iniciando sesión..." : "Login"}
             </button>
-            {error && <p className="error">{error}</p>}
+            <ToastContainer />
         </form>
     );
 };
