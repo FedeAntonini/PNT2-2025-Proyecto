@@ -1,4 +1,4 @@
-import { FaMessage } from "react-icons/fa6";
+import { FaPaperPlane } from "react-icons/fa6";
 import { useChat } from "../hooks/useChat";
 import { useState } from "react";
 
@@ -13,7 +13,7 @@ export default function RoomInput() {
 
             {/* Mic (ícono real) */}
             <button type="button" className="btn-mic" onClick={handleJoinRoom}>
-                <FaMessage />
+                <FaPaperPlane />
             </button>
         </div>
     )

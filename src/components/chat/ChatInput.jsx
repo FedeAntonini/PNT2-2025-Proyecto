@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { FaPlus, FaMicrophone, FaFileAlt, FaImage, FaVideo } from 'react-icons/fa';
 import { useChat } from '../hooks/useChat';
-import { FaMessage } from 'react-icons/fa6';
+import { FaPaperPlane } from 'react-icons/fa6';
 
 export default function ChatInput() {
   const [open, setOpen] = useState(false);
@@ -31,7 +31,7 @@ export default function ChatInput() {
 
         {/* Mic (ícono real) */}
         <button type="submit" className="btn-mic" aria-label="Grabar audio" >
-          <FaMessage />
+          <FaPaperPlane />
         </button>
       </form>
     </div>

@@ -44,7 +44,7 @@ export const ChatProvider = ({ children }) => {
         } else {
             setRooms([])
             setRoomUsers([])
-            setMessages([{ text: "Inicia sesión antes de usar la aplicacion" }])
+            setMessages([{ message: "Inicia sesión antes de usar la aplicacion" , username: "SERVER"}])
         }
     }, [isAuthenticated])
 
